@@ -26,7 +26,7 @@ function getDb(): ReturnType<typeof createDb> {
 // ビルド時は環境変数が無くてもインポート可能。実行時に初回アクセスで初期化する
 export const db = new Proxy({} as ReturnType<typeof createDb>, {
   get(_, prop) {
-    return (getDb() as Record<string | symbol, unknown>)[prop];
+    return (getDb() as unknown as Record<string | symbol, unknown>)[prop];
   },
 });
 
