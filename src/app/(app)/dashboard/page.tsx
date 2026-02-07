@@ -2,10 +2,17 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { getSession } from '@/lib/auth-server';
 import { getPosts } from '@/dal/posts';
+import { getUsersByIds } from '@/dal/users';
 import { getFollowerCount, getFollowingCount } from '@/dal/follows';
 import { PostList } from '@/components/posts/PostList';
 import { Button } from '@/components/common/Button';
 import { TrendingUp, Users, MessageSquare, Heart } from 'lucide-react';
+
+function toAuthorDisplayName(name: string | null, username: string | null): string {
+  if (name && name.trim()) return name.trim();
+  if (username && username.trim()) return `@${username.trim()}`;
+  return '名無し';
+}
 
 export default async function DashboardPage() {
   const session = await getSession();
@@ -15,7 +22,13 @@ export default async function DashboardPage() {
 
   // 最新の投稿を取得
   const recentPosts = await getPosts({ limit: 10 });
-  
+  const authorIds = [...new Set(recentPosts.map((p) => p.userId))];
+  const authorUsers = await getUsersByIds(authorIds);
+  const authorNames: Record<string, string> = {};
+  for (const u of authorUsers) {
+    authorNames[u.id] = toAuthorDisplayName(u.name, u.username);
+  }
+
   // 統計情報（簡易版）
   const stats = {
     posts: recentPosts.length,
@@ -95,6 +108,7 @@ export default async function DashboardPage() {
               createdAt: p.createdAt,
               updatedAt: p.updatedAt,
             }))}
+            authorNames={authorNames}
           />
         ) : (
           <div className="bg-gray-900 border border-gray-800 rounded-lg p-8 text-center">

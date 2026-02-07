@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSession } from '@/lib/auth-server';
-import { getPostById, updatePost, deletePost } from '@/dal/posts';
+import { getUserById } from '@/dal/users';
+import { getPostById, updatePost, deletePost, deletePostAsAdmin } from '@/dal/posts';
 
 type PostDetailParams = {
   params: Promise<{ id: string }>;
@@ -96,7 +97,20 @@ export async function DELETE(
     }
 
     const { id } = await params;
-    await deletePost(id, session.user.id);
+    const user = await getUserById(session.user.id);
+    const isAdmin = user && 'role' in user && user.role === 'admin';
+
+    if (isAdmin) {
+      const deleted = await deletePostAsAdmin(id);
+      if (!deleted) {
+        return NextResponse.json(
+          { error: '投稿が見つかりません' },
+          { status: 404 }
+        );
+      }
+    } else {
+      await deletePost(id, session.user.id);
+    }
 
     return NextResponse.json({ success: true }, { status: 200 });
   } catch (error: any) {

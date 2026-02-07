@@ -50,9 +50,11 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ url }, { status: 200 });
   } catch (error: any) {
     console.error('Image upload error:', error);
-    return NextResponse.json(
-      { error: '画像のアップロードに失敗しました' },
-      { status: 500 }
-    );
+    const message =
+      error?.message?.includes('R2が設定されていません') ||
+      error?.message?.includes('R2_BUCKET_NAME')
+        ? error.message
+        : '画像のアップロードに失敗しました';
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }

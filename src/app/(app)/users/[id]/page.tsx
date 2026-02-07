@@ -43,6 +43,8 @@ export default async function UserPage({ params }: UserPageProps) {
           language: user.language || 'ja',
           planType: (user.planType as 'free' | 'premium') || 'free',
           planExpiresAt: user.planExpiresAt ? new Date(user.planExpiresAt) : null,
+          hasFoundingBadge: !!('foundingBadgeGrantedAt' in user && user.foundingBadgeGrantedAt),
+          role: 'role' in user ? user.role : undefined,
         }}
         followerCount={followerCount}
         followingCount={followingCount}

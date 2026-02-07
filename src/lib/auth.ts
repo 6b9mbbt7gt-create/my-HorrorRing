@@ -1,10 +1,17 @@
 import { betterAuth } from 'better-auth';
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 import { db } from './db';
+import { users, session, account, verification } from './db/schema';
 
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
     provider: 'sqlite',
+    schema: {
+      user: users,
+      session,
+      account,
+      verification,
+    },
   }),
   emailAndPassword: {
     enabled: false, // Google OAuth only
@@ -40,11 +47,23 @@ export const auth = betterAuth({
         type: 'string',
         required: false,
       },
+      role: {
+        type: 'string',
+        required: false,
+        defaultValue: 'user',
+      },
     },
   },
   baseURL: process.env.BETTER_AUTH_URL || process.env.NEXT_PUBLIC_APP_URL,
   basePath: '/api/auth',
   secret: process.env.BETTER_AUTH_SECRET!,
+  trustedOrigins: [
+    process.env.BETTER_AUTH_URL,
+    process.env.NEXT_PUBLIC_APP_URL,
+    'http://localhost:3000',
+    'http://localhost:3001',
+    'http://localhost:3002',
+  ].filter((o): o is string => Boolean(o)),
 });
 
 export type Session = typeof auth.$Infer.Session;

@@ -4,9 +4,6 @@ const nextConfig = {
   eslint: {
     dirs: ["src"]
   },
-  experimental: {
-    appDir: true
-  }
 };
 
 export default nextConfig;

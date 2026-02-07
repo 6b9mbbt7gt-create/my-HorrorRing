@@ -37,3 +37,6 @@ next-env.d.ts
 
 # drizzle
 /drizzle
+
+# local dev database (when using file: in TURSO_DATABASE_URL)
+.data/

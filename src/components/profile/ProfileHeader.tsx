@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Crown, User } from 'lucide-react';
 import { Button } from '../common/Button';
 import { ProfileEditModal } from './ProfileEditModal';
+import { OriginalGhostBadge } from '@/components/badges/OriginalGhostBadge';
 
 type UserData = {
   id: string;
@@ -15,6 +16,10 @@ type UserData = {
   language: string;
   planType: 'free' | 'premium';
   planExpiresAt: Date | null;
+  /** 最古参バッジ「オリジナルゴースト」を所持しているか（有料会員 先着100名） */
+  hasFoundingBadge?: boolean;
+  /** 管理者ロール */
+  role?: string | null;
 };
 
 type ProfileHeaderProps = {
@@ -52,7 +57,12 @@ export function ProfileHeader({
                 <User className="w-12 h-12 text-gray-400" />
               </div>
             )}
-            {user.planType === 'premium' && (
+            {user.hasFoundingBadge && (
+              <div className="absolute -top-1 -right-1" title="最古参バッジ オリジナルゴースト">
+                <OriginalGhostBadge size="md" />
+              </div>
+            )}
+            {user.planType === 'premium' && !user.hasFoundingBadge && (
               <div className="absolute -bottom-2 -right-2 bg-gradient-to-r from-amber-500 to-red-600 rounded-full p-1">
                 <Crown className="w-4 h-4 text-white" />
               </div>
@@ -64,9 +74,20 @@ export function ProfileHeader({
               <h1 className="text-2xl font-bold text-white">
                 {user.name || user.username || user.email}
               </h1>
+              {user.hasFoundingBadge && (
+                <span className="flex items-center gap-1.5 px-2 py-1 bg-red-950/80 border border-red-800 text-amber-100 text-xs font-medium rounded" title="最古参バッジ オリジナルゴースト">
+                  <OriginalGhostBadge size="sm" />
+                  最古参
+                </span>
+              )}
               {user.planType === 'premium' && (
                 <span className="px-2 py-1 bg-gradient-to-r from-amber-500 to-red-600 text-white text-xs font-bold rounded">
                   プレミアム
+                </span>
+              )}
+              {user.role === 'admin' && (
+                <span className="px-2 py-1 bg-red-900/80 border border-red-700 text-red-200 text-xs font-bold rounded">
+                  管理者
                 </span>
               )}
             </div>

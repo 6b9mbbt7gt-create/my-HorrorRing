@@ -12,53 +12,54 @@ export function FeaturesSection() {
     {
       icon: Camera,
       title: '恐怖を投稿',
-      description: 'ホラーゲームのレビュー、心霊スポットの写真、都市伝説の体験談を共有しよう',
-      color: 'from-red-500 to-orange-500',
+      description: 'ホラーゲームのレビュー、心霊スポットの写真、都市伝説の体験談を共有できます。',
+      color: 'from-red-800 to-red-950',
     },
     {
       icon: MessageSquare,
       title: 'コミュニティ',
-      description: 'コメント、いいね、ハートで仲間とつながる。恐怖を分かち合おう',
-      color: 'from-red-600 to-red-700',
+      description: 'コメント・いいね・ゾクゾクで、同じ趣味の仲間とつながれます。',
+      color: 'from-red-900 to-red-950',
     },
     {
       icon: Search,
       title: '探索機能',
-      description: 'ジャンル別、地域別に恐怖体験を検索。あなただけの恐怖を見つけよう',
-      color: 'from-red-700 to-red-800',
+      description: 'ジャンル別・地域別に検索。気になるホラー体験を見つけよう。',
+      color: 'from-red-950 to-black',
     },
     {
       icon: MapPin,
       title: '心霊スポット',
-      description: 'Google Maps連携で正確な位置情報。実際に訪れた人の生の声を確認',
-      color: 'from-orange-600 to-red-600',
+      description: '実際に訪れた人の声をチェック。Google Maps連携で場所も確認できます。',
+      color: 'from-red-800 to-red-900',
     },
     {
       icon: Video,
       title: '動画投稿',
-      description: '有料プランで動画アップロード可能。リアルな恐怖体験を映像で共有',
-      color: 'from-red-500 to-red-600',
+      description: '有料プランで動画アップロード可能。映像で伝える恐怖体験。',
+      color: 'from-red-700 to-red-900',
     },
     {
       icon: Crown,
       title: 'プレミアム',
-      description: '無制限投稿、広告なし、限定コンテンツへのアクセス',
-      color: 'from-amber-500 to-red-600',
+      description: '無制限投稿、広告なし、限定コンテンツ。ホラーを思い切り楽しむためのプラン。',
+      color: 'from-amber-900 to-red-950',
     },
   ];
 
   return (
-    <section
-      id="features"
-      className="py-20 bg-black px-4"
-    >
-      <div className="container mx-auto max-w-6xl">
+    <section id="features" className="py-20 bg-black px-4 relative">
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(139,0,0,0.08)_0%,transparent_70%)]" />
+      <div className="container mx-auto max-w-6xl relative">
         <div className="text-center mb-16 space-y-4">
-          <h2 className="text-4xl sm:text-5xl font-bold text-white">
-            主要機能
+          <p className="text-red-800 text-sm font-bold tracking-widest">
+            FEATURES
+          </p>
+          <h2 className="text-4xl sm:text-5xl font-black text-white blood-text">
+            主な機能
           </h2>
-          <p className="text-gray-400 text-lg">
-            HorrorRingで恐怖体験を最大限に楽しむための機能
+          <p className="text-red-300/80 text-lg max-w-xl mx-auto">
+            ホラー好きのための、便利な機能がそろっています
           </p>
         </div>
 
@@ -68,13 +69,17 @@ export function FeaturesSection() {
             return (
               <div
                 key={index}
-                className="bg-gray-900 border border-gray-800 rounded-lg p-6 hover:border-red-600 transition-all duration-300 group"
+                className="bg-red-950/30 border-2 border-red-900/80 rounded-xl p-6 hover:border-red-700 hover:shadow-[0_0_30px_rgba(139,0,0,0.2)] transition-all duration-300 group"
               >
-                <div className={`w-12 h-12 rounded-lg bg-gradient-to-r ${feature.color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
-                  <Icon className="w-6 h-6 text-white" />
+                <div
+                  className={`w-12 h-12 rounded-lg bg-gradient-to-r ${feature.color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform border border-red-800/50`}
+                >
+                  <Icon className="w-6 h-6 text-red-200" />
                 </div>
-                <h3 className="text-xl font-bold text-white mb-2">{feature.title}</h3>
-                <p className="text-gray-400">{feature.description}</p>
+                <h3 className="text-xl font-bold text-red-100 mb-2">
+                  {feature.title}
+                </h3>
+                <p className="text-red-300/70 text-sm">{feature.description}</p>
               </div>
             );
           })}

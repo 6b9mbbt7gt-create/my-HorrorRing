@@ -35,6 +35,7 @@ export function ProfileEditModal({
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [formData, setFormData] = useState({
+    name: user.name || '',
     username: user.username || '',
     bio: user.bio || '',
     language: user.language || 'ja',
@@ -88,6 +89,16 @@ export function ProfileEditModal({
         )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
+          <Input
+            label="表示名"
+            value={formData.name}
+            onChange={(e) =>
+              setFormData({ ...formData, name: e.target.value })
+            }
+            placeholder="表示名を入力（省略時はメールアドレスなどで表示）"
+            maxLength={100}
+          />
+
           <Input
             label="ユーザー名"
             value={formData.username}

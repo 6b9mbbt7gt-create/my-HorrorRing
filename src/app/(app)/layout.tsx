@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { getSession } from '@/lib/auth-server';
+import { getUserById } from '@/dal/users';
 import { LogoutButton } from '@/components/common/LogoutButton';
 import { NotificationBell } from '@/components/notifications/NotificationBell';
 
@@ -9,16 +10,18 @@ export default async function AppLayout({
 }: {
   children: React.ReactNode;
 }) {
-  // 認証チェック
+  let session;
   try {
-    const session = await getSession();
+    session = await getSession();
     if (!session) {
       redirect('/login');
     }
   } catch (error) {
-    // 認証エラーの場合はログインページへ
     redirect('/login');
   }
+
+  const user = await getUserById(session.user.id);
+  const isAdmin = user && 'role' in user && user.role === 'admin';
 
   return (
     <div className="min-h-screen bg-black text-gray-100">
@@ -53,6 +56,28 @@ export default async function AppLayout({
               >
                 検索
               </Link>
+              <Link
+                href="/timeline"
+                className="text-gray-300 hover:text-white transition-colors"
+              >
+                タイムライン
+              </Link>
+              {isAdmin && (
+                <>
+                  <Link
+                    href="/admin"
+                    className="text-red-300 hover:text-red-200 transition-colors"
+                  >
+                    管理者
+                  </Link>
+                  <Link
+                    href="/developer"
+                    className="text-amber-300 hover:text-amber-200 transition-colors"
+                  >
+                    開発者
+                  </Link>
+                </>
+              )}
               <NotificationBell />
               <LogoutButton />
             </div>

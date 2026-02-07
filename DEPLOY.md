@@ -102,51 +102,6 @@ R2_PUBLIC_URL=https://your-r2-domain.com
 3. 「認証済みのリダイレクトURI」に以下を追加：
    - `https://my-horrorring-xxxxx.vercel.app/api/auth/callback/google`
 
-## デプロイができないときのチェックリスト
-
-デプロイには **2つの方法** があります。まずどちらを使うか決めましょう。
-
-### 方法A: Vercel の GitHub 連携（推奨・簡単）
-
-GitHub にプッシュするだけで Vercel が自動デプロイします。`.github/workflows/deploy.yml` は **使わなくてOK** です。
-
-| やること | 確認 |
-|----------|------|
-| 1. GitHub にリポジトリがある | `main` にプッシュ済みか |
-| 2. Vercel でプロジェクトをインポート | [Vercel Dashboard](https://vercel.com/dashboard) → Add New → Project → 対象リポジトリを選択 |
-| 3. 必須の環境変数を Vercel に設定 | 下記「必須環境変数」を参照 |
-| 4. 初回デプロイ | Deploy ボタンまたは `main` にプッシュ |
-
-**必須環境変数（Vercel の Settings → Environment Variables）**
-
-- `NEXT_PUBLIC_APP_URL` … デプロイ後のURL（例: `https://my-horrorring-xxx.vercel.app`）。初回は仮でOK。デプロイ後に正しいURLに更新
-- `TURSO_DATABASE_URL` … Turso の接続URL（`libsql://...`）
-- `TURSO_AUTH_TOKEN` … Turso の認証トークン
-- `BETTER_AUTH_SECRET` … 32文字以上のランダム文字列
-- `BETTER_AUTH_URL` … 上と同じくデプロイ後のURL
-
-Google OAuth / Polar / R2 は後から追加しても動作します（該当機能だけ無効になります）。
-
-### 方法B: GitHub Actions でデプロイ（deploy.yml を使う場合）
-
-`.github/workflows/deploy.yml` で Vercel にデプロイするには、**GitHub の Secrets** に以下がすべて必要です。
-
-| Secret 名 | 説明 |
-|-----------|------|
-| `VERCEL_TOKEN` | Vercel → Settings → Tokens で作成 |
-| `VERCEL_ORG_ID` | Vercel プロジェクトの Settings → General に表示 |
-| `VERCEL_PROJECT_ID` | 同上 |
-| `NEXT_PUBLIC_APP_URL` | 本番URL |
-| `TURSO_DATABASE_URL` | Turso 接続URL |
-| `TURSO_AUTH_TOKEN` | Turso トークン |
-| `BETTER_AUTH_SECRET` | 認証用シークレット |
-| `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` | （OAuth を使う場合） |
-| `R2_*` / `POLAR_*` | （R2・Polar を使う場合） |
-
-**Secrets の設定場所**: GitHub リポジトリ → Settings → Secrets and variables → Actions → New repository secret
-
----
-
 ## トラブルシューティング
 
 ### ビルドエラーが発生する場合

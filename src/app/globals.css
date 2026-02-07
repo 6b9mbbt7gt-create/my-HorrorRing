@@ -9,8 +9,7 @@ body {
 }
 
 body {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
-    "Helvetica Neue", Arial, sans-serif;
+  font-family: "Helvetica Neue", Arial, sans-serif;
 }
 
 a {
@@ -20,5 +19,45 @@ a {
 
 * {
   box-sizing: border-box;
+}
+
+/* ホラーLP用: 血の雫アニメーション */
+@keyframes blood-drip {
+  0% { transform: translateY(-100%); opacity: 0.8; }
+  50% { opacity: 1; }
+  100% { transform: translateY(100vh); opacity: 0.6; }
+}
+
+.blood-drip {
+  position: fixed;
+  top: 0;
+  width: 4px;
+  height: 80px;
+  background: linear-gradient(180deg, #8b0000 0%, #4a0000 50%, transparent 100%);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 1;
+  animation: blood-drip 8s linear infinite;
+  opacity: 0.4;
+}
+
+/* 血のスプラッター風テクスチャ */
+.blood-text {
+  color: #8b0000;
+  text-shadow: 0 0 20px rgba(139, 0, 0, 0.8), 0 0 40px rgba(139, 0, 0, 0.4);
+}
+
+.blood-gradient {
+  background: linear-gradient(180deg, #1a0000 0%, #0d0000 50%, #1a0505 100%);
+}
+
+/* 警告フラッシュ */
+@keyframes warning-pulse {
+  0%, 100% { opacity: 0.15; }
+  50% { opacity: 0.25; }
+}
+
+.warning-glow {
+  animation: warning-pulse 3s ease-in-out infinite;
 }
 

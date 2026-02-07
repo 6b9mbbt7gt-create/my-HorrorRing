@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { formatRelativeTime } from '@/lib/utils/format';
+import { formatRelativeTime, getAuthorDisplayName } from '@/lib/utils/format';
 
 type PostCardProps = {
   post: {
@@ -17,10 +17,12 @@ type PostCardProps = {
     createdAt: string;
     updatedAt: string;
   };
+  /** 投稿者表示名（表示名 or @ユーザー名。メールは含めない） */
+  authorDisplayName?: string | null;
   showUser?: boolean;
 };
 
-export function PostCard({ post, showUser = true }: PostCardProps) {
+export function PostCard({ post, authorDisplayName, showUser = true }: PostCardProps) {
   return (
     <article className="bg-gray-900 border border-gray-800 rounded-lg p-6 hover:border-purple-600 transition-colors">
       <div className="flex items-start justify-between mb-4">
@@ -32,7 +34,7 @@ export function PostCard({ post, showUser = true }: PostCardProps) {
           </Link>
           {showUser && (
             <p className="text-sm text-gray-400">
-              @{post.userId.slice(0, 8)} • {formatRelativeTime(post.createdAt)}
+              {getAuthorDisplayName(post.userId, authorDisplayName)} • {formatRelativeTime(post.createdAt)}
             </p>
           )}
         </div>
@@ -59,7 +61,7 @@ export function PostCard({ post, showUser = true }: PostCardProps) {
       <p className="text-gray-300 mb-4 line-clamp-3">{post.content}</p>
 
       <div className="flex items-center gap-4 text-sm text-gray-400">
-        <span>❤️ {post.heartCount}</span>
+        <span>💜 {post.heartCount}</span>
         <span>👍 {post.likeCount}</span>
         <span>💬 {post.commentCount}</span>
       </div>

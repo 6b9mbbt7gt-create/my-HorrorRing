@@ -18,7 +18,7 @@ export default async function ProfilePage() {
     redirect('/login');
   }
 
-  const posts = await getPosts({ userId: session.user.id, limit: 20 });
+  const posts = await getPosts({ userId: session.user.id, limit: 20, includeAllVisibility: true });
   const followerCount = await getFollowerCount(session.user.id);
   const followingCount = await getFollowingCount(session.user.id);
 
@@ -35,6 +35,8 @@ export default async function ProfilePage() {
           language: user.language || 'ja',
           planType: (user.planType as 'free' | 'premium') || 'free',
           planExpiresAt: user.planExpiresAt ? new Date(user.planExpiresAt) : null,
+          hasFoundingBadge: !!('foundingBadgeGrantedAt' in user && user.foundingBadgeGrantedAt),
+          role: 'role' in user ? user.role : undefined,
         }}
         followerCount={followerCount}
         followingCount={followingCount}

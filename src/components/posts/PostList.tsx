@@ -16,10 +16,12 @@ type PostListProps = {
     createdAt: string;
     updatedAt: string;
   }>;
+  /** userId -> 表示名（表示名 or @ユーザー名。メールは含めない） */
+  authorNames?: Record<string, string>;
   showUser?: boolean;
 };
 
-export function PostList({ posts, showUser = true }: PostListProps) {
+export function PostList({ posts, authorNames, showUser = true }: PostListProps) {
   if (posts.length === 0) {
     return (
       <div className="bg-gray-900 border border-gray-800 rounded-lg p-8 text-center">
@@ -31,7 +33,12 @@ export function PostList({ posts, showUser = true }: PostListProps) {
   return (
     <div className="space-y-4">
       {posts.map((post) => (
-        <PostCard key={post.id} post={post} showUser={showUser} />
+        <PostCard
+          key={post.id}
+          post={post}
+          authorDisplayName={authorNames?.[post.userId]}
+          showUser={showUser}
+        />
       ))}
     </div>
   );

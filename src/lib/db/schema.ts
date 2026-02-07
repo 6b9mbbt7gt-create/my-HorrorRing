@@ -14,6 +14,10 @@ export const users = sqliteTable('user', {
   language: text('language').default('ja'),
   planType: text('plan_type').default('free'),
   planExpiresAt: text('plan_expires_at'),
+  /** 最古参バッジ付与日（有料会員 先着100名、null は未付与） */
+  foundingBadgeGrantedAt: text('founding_badge_granted_at'),
+  /** ロール: user | admin */
+  role: text('role').default('user'),
   createdAt: text('createdAt').notNull().default(sql`CURRENT_TIMESTAMP`),
   updatedAt: text('updatedAt').notNull().default(sql`CURRENT_TIMESTAMP`),
 });

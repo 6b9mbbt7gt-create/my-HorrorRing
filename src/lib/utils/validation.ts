@@ -32,6 +32,7 @@ export const postCreateSchema = createPostSchema;
  * プロフィール更新のバリデーション
  */
 export const updateProfileSchema = z.object({
+  name: z.string().max(100, '表示名は100文字以下').optional().nullable(),
   username: usernameSchema.optional(),
   bio: z.string().max(500, '自己紹介は500文字以下である必要があります').optional(),
   language: z.enum(['ja', 'en']).optional(),

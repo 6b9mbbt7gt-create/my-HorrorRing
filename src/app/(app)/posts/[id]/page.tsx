@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation';
 import { getPostById } from '@/dal/posts';
 import { getComments } from '@/dal/comments';
+import { getUsersByIds } from '@/dal/users';
 import { isLiked } from '@/dal/likes';
 import { isHearted } from '@/dal/hearts';
 import { getSession } from '@/lib/auth-server';
@@ -8,7 +9,13 @@ import { CommentList } from '@/components/posts/CommentList';
 import Link from 'next/link';
 import { Button } from '@/components/common/Button';
 import { PostActions } from '@/components/posts/PostActions';
-import { formatRelativeTime } from '@/lib/utils/format';
+import { formatRelativeTime, getAuthorDisplayName } from '@/lib/utils/format';
+
+function toAuthorDisplayName(name: string | null, username: string | null): string {
+  if (name && name.trim()) return name.trim();
+  if (username && username.trim()) return `@${username.trim()}`;
+  return '名無し';
+}
 
 type PostDetailPageProps = {
   params: Promise<{ id: string }>;
@@ -31,6 +38,19 @@ export default async function PostDetailPage({ params }: PostDetailPageProps) {
   const liked = await isLiked(id, session.user.id);
   const hearted = await isHearted(id, session.user.id);
 
+  const postAuthorUsers = await getUsersByIds([post.userId]);
+  const postAuthor = postAuthorUsers[0];
+  const postAuthorDisplayName = postAuthor
+    ? toAuthorDisplayName(postAuthor.name, postAuthor.username)
+    : undefined;
+
+  const commentUserIds = [...new Set(comments.map((c) => c.userId))];
+  const commentAuthors = await getUsersByIds(commentUserIds);
+  const commentAuthorNames: Record<string, string> = {};
+  for (const u of commentAuthors) {
+    commentAuthorNames[u.id] = toAuthorDisplayName(u.name, u.username);
+  }
+
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       <div className="flex items-center gap-4 mb-6">
@@ -46,7 +66,7 @@ export default async function PostDetailPage({ params }: PostDetailPageProps) {
           <div className="flex-1">
             <h1 className="text-3xl font-bold text-white mb-2">{post.title}</h1>
             <p className="text-sm text-gray-400">
-              @{post.userId.slice(0, 8)} • {formatRelativeTime(post.createdAt)}
+              {getAuthorDisplayName(post.userId, postAuthorDisplayName)} • {formatRelativeTime(post.createdAt)}
             </p>
           </div>
           <div className="flex gap-2 text-xs">
@@ -92,11 +112,8 @@ export default async function PostDetailPage({ params }: PostDetailPageProps) {
           createdAt: c.createdAt,
           updatedAt: c.updatedAt,
         }))}
+        authorNames={commentAuthorNames}
         currentUserId={session.user.id}
-        onCommentSubmit={async () => {
-          // ページをリロードしてコメントを再取得
-          window.location.reload();
-        }}
       />
     </div>
   );

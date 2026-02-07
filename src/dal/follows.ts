@@ -98,3 +98,14 @@ export async function getFollowingCount(userId: string): Promise<number> {
 
   return result?.count || 0;
 }
+
+/**
+ * フォロー中のユーザーID一覧を取得（タイムラインの「フォロー中」フィード用）
+ */
+export async function getFollowingIds(followerId: string): Promise<string[]> {
+  const rows = await db
+    .select({ followingId: follows.followingId })
+    .from(follows)
+    .where(eq(follows.followerId, followerId));
+  return rows.map((r) => r.followingId);
+}

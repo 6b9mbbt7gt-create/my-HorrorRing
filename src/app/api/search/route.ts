@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSession } from '@/lib/auth-server';
-import { getPosts } from '@/dal/posts';
-import { getUserById, getUserByUsername } from '@/dal/users';
+import { getUsersByIds } from '@/dal/users';
 import { eq, or, like, and } from 'drizzle-orm';
 import { db } from '@/lib/db';
 import { posts, users } from '@/lib/db/schema';
@@ -58,6 +57,15 @@ export async function GET(request: NextRequest) {
         .offset(offset);
 
       results.posts = searchPosts;
+      const authorIds = [...new Set(searchPosts.map((p: { userId: string }) => p.userId))];
+      const authorUsers = await getUsersByIds(authorIds);
+      const authorNames: Record<string, string> = {};
+      for (const u of authorUsers) {
+        const name = u.name && u.name.trim() ? u.name.trim() : null;
+        const username = u.username && u.username.trim() ? `@${u.username.trim()}` : null;
+        authorNames[u.id] = name || username || '名無し';
+      }
+      results.authorNames = authorNames;
     }
 
     // ユーザー検索

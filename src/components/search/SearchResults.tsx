@@ -29,6 +29,7 @@ type SearchResult = {
     createdAt: string;
     updatedAt: string;
   }>;
+  authorNames?: Record<string, string>;
   users: Array<{
     id: string;
     email: string;
@@ -103,7 +104,7 @@ export function SearchResults({ query, type, genre }: SearchResultsProps) {
           <h2 className="text-2xl font-bold text-white mb-4">
             投稿 ({results.posts.length})
           </h2>
-          <PostList posts={results.posts} />
+          <PostList posts={results.posts} authorNames={results.authorNames} />
         </div>
       )}
 

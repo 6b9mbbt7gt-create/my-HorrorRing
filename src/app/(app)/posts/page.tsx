@@ -2,8 +2,15 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { getSession } from '@/lib/auth-server';
 import { getPosts } from '@/dal/posts';
+import { getUsersByIds } from '@/dal/users';
 import { PostList } from '@/components/posts/PostList';
 import { Button } from '@/components/common/Button';
+
+function toAuthorDisplayName(name: string | null, username: string | null): string {
+  if (name && name.trim()) return name.trim();
+  if (username && username.trim()) return `@${username.trim()}`;
+  return '名無し';
+}
 
 type PostsPageProps = {
   searchParams: Promise<{ genre?: string; page?: string }>;
@@ -22,6 +29,12 @@ export default async function PostsPage({ searchParams }: PostsPageProps) {
   const offset = (page - 1) * limit;
 
   const posts = await getPosts({ limit, offset, genre });
+  const authorIds = [...new Set(posts.map((p) => p.userId))];
+  const authorUsers = await getUsersByIds(authorIds);
+  const authorNames: Record<string, string> = {};
+  for (const u of authorUsers) {
+    authorNames[u.id] = toAuthorDisplayName(u.name, u.username);
+  }
 
   return (
     <div className="space-y-6">
@@ -92,6 +105,7 @@ export default async function PostsPage({ searchParams }: PostsPageProps) {
           createdAt: p.createdAt,
           updatedAt: p.updatedAt,
         }))}
+        authorNames={authorNames}
       />
     </div>
   );

@@ -13,49 +13,53 @@ export function Header() {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
     };
-
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
+    if (element) element.scrollIntoView({ behavior: 'smooth' });
   };
 
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
         isScrolled
-          ? 'bg-black/90 backdrop-blur-md border-b border-red-900/50'
+          ? 'bg-black/95 backdrop-blur-md border-b-2 border-red-950 shadow-[0_0_30px_rgba(139,0,0,0.3)]'
           : 'bg-transparent'
       }`}
     >
       <nav className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2 text-xl font-bold text-red-500">
+          <Link
+            href="/"
+            className="flex items-center gap-2 text-xl font-bold text-red-600 hover:text-red-500 transition-colors drop-shadow-[0_0_8px_rgba(139,0,0,0.6)]"
+          >
             <Skull className="w-6 h-6" />
             HorrorRing
           </Link>
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-3 sm:gap-4 min-w-0">
             {pathname === '/' && (
-              <>
-                {['hero', 'features', 'pricing'].map((id) => (
+              <div className="flex items-center gap-2 overflow-x-auto py-1 -mx-2 px-2 sm:mx-0 sm:px-0 min-w-0">
+                {[
+                  { id: 'hero', label: 'ホーム' },
+                  { id: 'features', label: '機能' },
+                  { id: 'pricing', label: 'プラン' },
+                ].map(({ id, label }) => (
                   <button
                     key={id}
                     onClick={() => scrollToSection(id)}
-                    className="text-sm font-medium text-gray-300 hover:text-red-500 transition-colors"
+                    className="flex-shrink-0 px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap bg-red-950/80 hover:bg-red-900/80 text-red-200 hover:text-white border border-red-900/80 hover:border-red-600 transition-colors"
                   >
-                    {id === 'hero' ? 'ホーム' : id === 'features' ? '機能' : 'プラン'}
+                    {label}
                   </button>
                 ))}
-              </>
+              </div>
             )}
             <Link
               href="/login"
-              className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors text-sm font-medium"
+              className="flex-shrink-0 px-5 py-2.5 bg-red-700 hover:bg-red-600 text-white rounded-lg font-bold text-sm whitespace-nowrap border border-red-500/50 shadow-[0_0_15px_rgba(185,28,28,0.5)] hover:shadow-[0_0_25px_rgba(185,28,28,0.7)] transition-all"
             >
               今すぐ参加
             </Link>
